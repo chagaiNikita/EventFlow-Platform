@@ -1,0 +1,18 @@
+version: '3.1'
+
+volumes:
+  pg_demo:
+
+
+services:
+  demo_db:
+    image: postgres:18
+    restart: always
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_DB=demo_db
+    volumes:
+      - pg_demo:/var/lib/postgresql
+    ports:
+      - "127.0.0.1:5433:5432"

@@ -1,27 +1,29 @@
 version: '3.1'
 
 volumes:
-  pg_demo:
+  pg_auth:
 
 services:
-  demo_db:
+  auth_db:
     image: postgres:18
     restart: always
     environment:
       - POSTGRES_USER=user
       - POSTGRES_PASSWORD=pass
-      - POSTGRES_DB=demo_db
+      - POSTGRES_DB=auth_db
     volumes:
-      - pg_demo:/var/lib/postgresql
+      - pg_auth:/var/lib/postgresql
     ports:
       - "127.0.0.1:5433:5432"
 
   auth-service:
     restart: always
+    env_file:
+      - ./auth-service/.env
     build:
       context: .  # Корень монорепозитория
       dockerfile: ./auth-service/Dockerfile  # Путь к Dockerfile
     ports:
       - "8082:8080"
     depends_on:
-      - demo_db
+      - auth_db

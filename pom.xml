@@ -39,6 +39,7 @@
         <mapstruct.version>1.6.3</mapstruct.version>
         <springdoc.version>2.8.15</springdoc.version>
         <liquibase.version>5.0.1</liquibase.version>
+        <security.version>3.5.9</security.version>
     </properties>
 
     <!-- Управление версиями зависимостей -->
@@ -62,6 +63,11 @@
                 <groupId>org.mapstruct</groupId>
                 <artifactId>mapstruct</artifactId>
                 <version>${mapstruct.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-security</artifactId>
+                <version>${security.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

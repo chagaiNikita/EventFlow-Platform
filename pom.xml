@@ -69,6 +69,7 @@
                 <artifactId>spring-boot-starter-security</artifactId>
                 <version>${security.version}</version>
             </dependency>
+
         </dependencies>
     </dependencyManagement>
 

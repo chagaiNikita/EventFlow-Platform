@@ -15,7 +15,7 @@ import java.util.Date;
 @Component
 public class JwtService {
 
-    @Value("2dcfe91f0c3ef8dfb40d8a7c65255378fb255939")
+    @Value("123aa5bdf97dfce050e6b4ccdf20ebd5ba9bb74804b2ef89f34f5a4bac6918863dbf0bdce2cfa16f")
     private String jwtSecret;
 
     public String getEmailFromToken(String token) {

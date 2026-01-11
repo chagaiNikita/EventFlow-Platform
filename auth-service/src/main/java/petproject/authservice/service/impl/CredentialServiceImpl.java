@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import petproject.authservice.dto.CredentialCreateDto;
+import petproject.authservice.exception.EmailAlreadyExistsException;
 import petproject.authservice.mapper.CredentialMapper;
 import petproject.authservice.model.Credential;
 import petproject.authservice.repository.CredentialRepository;
@@ -25,6 +26,10 @@ public class CredentialServiceImpl implements CredentialService {
 
     @Override
     public Credential createCredential(CredentialCreateDto credentialCreateDto) {
+        if (credentialRepository.existsByEmail(credentialCreateDto.getEmail())) {
+            throw new EmailAlreadyExistsException();
+        }
+
         Credential credential = credentialMapper.toCredential(credentialCreateDto);
         credential.setUserId(UUID.randomUUID()); //TODO реализовать подставку реального юзер айди
         credential.setPasswordHash(passwordEncoder.encode(credentialCreateDto.getPassword()));
@@ -52,6 +57,11 @@ public class CredentialServiceImpl implements CredentialService {
     @Override
     public Credential findByEmail(String email) {
         return credentialRepository.findByEmail(email).orElseThrow();
+    }
+
+    @Override
+    public Credential findByUserId(UUID userId) {
+        return credentialRepository.findByUserId(userId).orElseThrow();
     }
 
 

@@ -32,7 +32,7 @@ public class AuthController {
     }
 
     @PostMapping("refresh")
-    public ResponseEntity<?> refresh(@RequestBody RefreshTokenDto refreshTokenDto) throws AuthenticationException {
+    public ResponseEntity<?> refresh(@RequestBody @Valid RefreshTokenDto refreshTokenDto) throws AuthenticationException {
         return ResponseEntity.ok(authService.refreshToken(refreshTokenDto));
     }
 

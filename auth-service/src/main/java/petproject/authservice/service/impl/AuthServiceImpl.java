@@ -24,15 +24,15 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public JwtAuthenticationDto signIn(UserCredentialsDto userCredentialsDto) throws AuthenticationException {
         Credential credential = credentialService.findByCredentials(userCredentialsDto);
-        return jwtService.generateAuthToken(credential.getEmail());
+        return jwtService.generateAuthToken(credential);
     }
 
     @Override
     public JwtAuthenticationDto refreshToken(RefreshTokenDto refreshTokenDto) throws AuthenticationException {
         String refreshToken = refreshTokenDto.getRefreshToken();
-        if (refreshToken != null && jwtService.validateJwtToken(refreshToken)) {
-            Credential credential = credentialService.findByEmail(jwtService.getEmailFromToken(refreshToken));
-            return jwtService.refreshBaseToken(credential.getEmail(), refreshToken);
+        if (jwtService.validateRefreshToken(refreshToken)) {
+            Credential credential = credentialService.findByUserId(jwtService.getUserIdFromRefreshToken(refreshToken));
+            return jwtService.refreshBaseToken(credential, refreshToken);
         }
         throw new AuthenticationException("Invalid refresh token");
     }
@@ -44,6 +44,6 @@ public class AuthServiceImpl implements AuthService {
                 .password(userRegisterDto.getPassword())
                 .build());
 
-        return jwtService.generateAuthToken(created.getEmail());
+        return jwtService.generateAuthToken(created);
     }
 }

@@ -8,6 +8,7 @@ import petproject.authservice.security.jwt.UserCredentialsDto;
 
 import javax.naming.AuthenticationException;
 import java.util.List;
+import java.util.UUID;
 
 public interface CredentialService {
 
@@ -19,4 +20,6 @@ public interface CredentialService {
     Credential findByCredentials(UserCredentialsDto userCredentialsDto) throws AuthenticationException;
 
     Credential findByEmail(String email);
+
+    Credential findByUserId(UUID userId);
 }

@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import petproject.authservice.exception.ErrorResponseBody;
 import petproject.authservice.service.ErrorService;
 
+import java.util.NoSuchElementException;
+
 @ControllerAdvice
 @RequiredArgsConstructor
 public class GlobalExceptionHandler {
@@ -22,5 +24,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponseBody> handleRuntime(RuntimeException e) {
         return new ResponseEntity<>(errorService.getErrorResponseBody(e), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(NoSuchElementException.class)
+    public ResponseEntity<ErrorResponseBody> handleNoSuchElementException(NoSuchElementException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorService.getErrorResponseBody(e));
     }
 }

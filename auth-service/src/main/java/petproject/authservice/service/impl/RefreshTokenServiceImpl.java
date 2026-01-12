@@ -3,6 +3,7 @@ package petproject.authservice.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import petproject.authservice.exception.RefreshTokenNotFoundException;
 import petproject.authservice.model.RefreshToken;
 import petproject.authservice.repository.RefreshTokenRepository;
 import petproject.authservice.service.RefreshTokenService;
@@ -15,15 +16,15 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class RefreshTokenServiceImpl implements RefreshTokenService {
     private final RefreshTokenRepository refreshTokenRepository;
-    private final PasswordEncoder passwordEncoder;
 
 
     @Override
     public RefreshToken save(UUID userId, String refreshToken) {
         RefreshToken refreshTokenEntity = RefreshToken.builder()
                 .userId(userId)
-                .token(passwordEncoder.encode(refreshToken))
+                .token(refreshToken)
                 .expiresAt(LocalDateTime.now().plusDays(30))
+                .createdAt(LocalDateTime.now())
                 .build();
 
         return refreshTokenRepository.save(refreshTokenEntity);
@@ -31,8 +32,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
     @Override
     public boolean validateToken(String token) {
-        String hashedToken = passwordEncoder.encode(token);
-        Optional<RefreshToken> refreshToken = refreshTokenRepository.findRefreshTokenByToken(hashedToken);
+        Optional<RefreshToken> refreshToken = refreshTokenRepository.findRefreshTokenByToken(token);
 
         if (refreshToken.isEmpty()) {
             return false;
@@ -49,8 +49,8 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
     @Override
     public UUID getUserIdFromRefreshToken(String refreshToken) {
-        return refreshTokenRepository.findRefreshTokenByToken(passwordEncoder.encode(refreshToken))
-                .map(RefreshToken::getUserId).orElseThrow();
+        return refreshTokenRepository.findRefreshTokenByToken(refreshToken)
+                .map(RefreshToken::getUserId).orElseThrow(RefreshTokenNotFoundException::new);
     }
 
 }

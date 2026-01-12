@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import petproject.authservice.exception.EmailAlreadyExistsException;
 import petproject.authservice.exception.ErrorResponseBody;
 import petproject.authservice.service.ErrorService;
 
@@ -21,8 +22,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorService.makeResponse(e.getBindingResult()), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ErrorResponseBody> handleRuntime(RuntimeException e) {
+    @ExceptionHandler(EmailAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponseBody> handleEmailAlreadyExistsException(EmailAlreadyExistsException e) {
         return new ResponseEntity<>(errorService.getErrorResponseBody(e), HttpStatus.CONFLICT);
     }
 

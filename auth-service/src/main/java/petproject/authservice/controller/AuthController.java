@@ -4,11 +4,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import petproject.authservice.dto.CredentialCreateDto;
+import petproject.authservice.dto.LogoutDto;
 import petproject.authservice.dto.UserRegisterDto;
-import petproject.authservice.security.jwt.JwtAuthenticationDto;
-import petproject.authservice.security.jwt.RefreshTokenDto;
-import petproject.authservice.security.jwt.UserCredentialsDto;
+import petproject.authservice.dto.JwtAuthenticationDto;
+import petproject.authservice.dto.RefreshTokenDto;
+import petproject.authservice.dto.UserCredentialsDto;
 import petproject.authservice.service.AuthService;
 import petproject.authservice.service.CredentialService;
 
@@ -44,5 +44,18 @@ public class AuthController {
     @GetMapping()
     public ResponseEntity<?> getCredentials() {
         return ResponseEntity.ok(credentialService.getAllCredentials());
+    }
+
+    @PostMapping("logout")
+    public ResponseEntity<?> logout(@RequestBody @Valid LogoutDto logoutDto) {
+        authService.logout(logoutDto.getRefreshToken());
+        return ResponseEntity.ok().build();
+    }
+
+
+    @PostMapping("logout-all")
+    public ResponseEntity<?> logoutAll(@RequestHeader("Authorization") String authHeader) throws AuthenticationException {
+        authService.logoutAll(authHeader);
+        return ResponseEntity.ok().build();
     }
 }

@@ -5,10 +5,10 @@ import org.springframework.stereotype.Service;
 import petproject.authservice.dto.CredentialCreateDto;
 import petproject.authservice.dto.UserRegisterDto;
 import petproject.authservice.model.Credential;
-import petproject.authservice.security.jwt.JwtAuthenticationDto;
+import petproject.authservice.dto.JwtAuthenticationDto;
 import petproject.authservice.security.jwt.JwtService;
-import petproject.authservice.security.jwt.RefreshTokenDto;
-import petproject.authservice.security.jwt.UserCredentialsDto;
+import petproject.authservice.dto.RefreshTokenDto;
+import petproject.authservice.dto.UserCredentialsDto;
 import petproject.authservice.service.AuthService;
 import petproject.authservice.service.CredentialService;
 
@@ -45,5 +45,23 @@ public class AuthServiceImpl implements AuthService {
                 .build());
 
         return jwtService.generateAuthToken(created);
+    }
+
+    @Override
+    public void logout(String refreshToken) {
+        jwtService.deleteToken(refreshToken);
+    }
+
+
+    @Override
+    public void logoutAll(String authHeader) throws AuthenticationException {
+        String token = authHeader.substring(7);
+
+//        if (!jwtService.validateJwtToken(token)) {
+//            throw new AuthenticationException("Invalid access token");
+//        }
+
+        jwtService.deleteAllUserTokens(token);
+
     }
 }

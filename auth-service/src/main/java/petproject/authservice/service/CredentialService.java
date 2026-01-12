@@ -2,9 +2,7 @@ package petproject.authservice.service;
 
 import petproject.authservice.dto.CredentialCreateDto;
 import petproject.authservice.model.Credential;
-import petproject.authservice.security.jwt.JwtAuthenticationDto;
-import petproject.authservice.security.jwt.RefreshTokenDto;
-import petproject.authservice.security.jwt.UserCredentialsDto;
+import petproject.authservice.dto.UserCredentialsDto;
 
 import javax.naming.AuthenticationException;
 import java.util.List;

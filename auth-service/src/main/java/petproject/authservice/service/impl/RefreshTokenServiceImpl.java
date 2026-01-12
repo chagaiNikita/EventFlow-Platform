@@ -53,4 +53,16 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
                 .map(RefreshToken::getUserId).orElseThrow(RefreshTokenNotFoundException::new);
     }
 
+    @Override
+    public void deleteToken(String refreshToken) {
+        RefreshToken refreshTokenEntity = refreshTokenRepository.findRefreshTokenByToken(refreshToken)
+                .orElseThrow(RefreshTokenNotFoundException::new);
+        refreshTokenRepository.delete(refreshTokenEntity);
+    }
+
+    @Override
+    public void deleteAllTokensByUserId(UUID userId) {
+        refreshTokenRepository.deleteAllByUserId(userId);
+    }
+
 }

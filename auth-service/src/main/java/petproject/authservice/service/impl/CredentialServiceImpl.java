@@ -8,7 +8,7 @@ import petproject.authservice.exception.EmailAlreadyExistsException;
 import petproject.authservice.mapper.CredentialMapper;
 import petproject.authservice.model.Credential;
 import petproject.authservice.repository.CredentialRepository;
-import petproject.authservice.security.jwt.UserCredentialsDto;
+import petproject.authservice.dto.UserCredentialsDto;
 import petproject.authservice.service.CredentialService;
 
 import javax.naming.AuthenticationException;

@@ -7,6 +7,7 @@ import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import petproject.authservice.dto.JwtAuthenticationDto;
 import petproject.authservice.model.Credential;
 import petproject.authservice.service.RefreshTokenService;
 
@@ -24,13 +25,12 @@ public class JwtService {
     private String jwtSecret;
     private final RefreshTokenService refreshTokenService;
 
-    public String getEmailFromToken(String token) {
-        Claims claims = Jwts.parser()
+    public Claims getClaimsFromToken(String token) {
+        return Jwts.parser()
                 .verifyWith(getSingInKey())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
-        return claims.getSubject();
     }
 
     public UUID getUserIdFromRefreshToken(String token) {
@@ -88,5 +88,16 @@ public class JwtService {
     private SecretKey getSingInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(jwtSecret);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    public void deleteToken(String refreshToken) {
+        refreshTokenService.deleteToken(refreshToken);
+    }
+
+    public void deleteAllUserTokens(String token) {
+        Claims claims = getClaimsFromToken(token);
+        UUID userId = UUID.fromString(claims.get("user_id").toString());
+
+        refreshTokenService.deleteAllTokensByUserId(userId);
     }
 }

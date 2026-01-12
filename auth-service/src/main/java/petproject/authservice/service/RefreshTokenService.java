@@ -10,4 +10,8 @@ public interface RefreshTokenService {
     boolean validateToken(String token);
 
     UUID getUserIdFromRefreshToken(String refreshToken);
+
+    void deleteToken(String refreshToken);
+
+    void deleteAllTokensByUserId(UUID userId);
 }

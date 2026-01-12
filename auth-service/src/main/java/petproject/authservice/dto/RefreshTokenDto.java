@@ -1,4 +1,4 @@
-package petproject.authservice.security.jwt;
+package petproject.authservice.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;

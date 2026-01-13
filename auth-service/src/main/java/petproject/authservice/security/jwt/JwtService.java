@@ -21,7 +21,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class JwtService {
 
-    @Value("123aa5bdf97dfce050e6b4ccdf20ebd5ba9bb74804b2ef89f34f5a4bac6918863dbf0bdce2cfa16f")
+    @Value("${JWT_SECRET}")
     private String jwtSecret;
     private final RefreshTokenService refreshTokenService;
 
@@ -46,9 +46,8 @@ public class JwtService {
                     .getPayload();
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            return false;
         }
-        return false;
     }
 
     public boolean validateRefreshToken(String token) {

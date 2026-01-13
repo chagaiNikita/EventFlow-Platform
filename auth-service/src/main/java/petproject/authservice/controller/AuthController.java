@@ -16,14 +16,11 @@ import javax.naming.AuthenticationException;
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
+
     @PostMapping
-    public ResponseEntity<?> signIn(@RequestBody @Valid UserRequestDto userRequestDto) {
-        try {
+    public ResponseEntity<?> signIn(@RequestBody @Valid UserRequestDto userRequestDto) throws AuthenticationException {
             JwtAuthenticationDto jwtAuthenticationDto = authService.signIn(userRequestDto);
             return ResponseEntity.ok(jwtAuthenticationDto);
-        } catch (AuthenticationException e) {
-            throw new RuntimeException("Authentication failed" + e.getMessage());
-        }
     }
 
     @PostMapping("refresh")

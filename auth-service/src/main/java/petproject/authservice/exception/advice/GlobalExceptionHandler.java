@@ -10,6 +10,7 @@ import petproject.authservice.exception.EmailAlreadyExistsException;
 import petproject.authservice.exception.ErrorResponseBody;
 import petproject.authservice.service.ErrorService;
 
+import javax.naming.AuthenticationException;
 import java.util.NoSuchElementException;
 
 @ControllerAdvice
@@ -30,5 +31,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<ErrorResponseBody> handleNoSuchElementException(NoSuchElementException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorService.getErrorResponseBody(e));
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ErrorResponseBody> handleAuthenticationException(AuthenticationException e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorService.getErrorResponseBody(e));
     }
 }

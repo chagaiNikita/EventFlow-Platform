@@ -3,6 +3,7 @@ package petproject.authservice.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import petproject.authservice.exception.RefreshTokenNotFoundException;
 import petproject.authservice.model.RefreshToken;
 import petproject.authservice.repository.RefreshTokenRepository;
@@ -61,6 +62,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     }
 
     @Override
+    @Transactional
     public void deleteAllTokensByUserId(UUID userId) {
         refreshTokenRepository.deleteAllByUserId(userId);
     }

@@ -18,3 +18,5 @@ logging:
     org.springframework.boot.context.config: DEBUG
     org.springframework.core.env: DEBUG
 
+JWT_SECRET: ${JWT_SECRET}
+

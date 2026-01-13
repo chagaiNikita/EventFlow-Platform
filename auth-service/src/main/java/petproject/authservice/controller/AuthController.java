@@ -3,6 +3,7 @@ package petproject.authservice.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import petproject.authservice.dto.UserRequestDto;
 import petproject.authservice.dto.JwtAuthenticationDto;
@@ -43,8 +44,8 @@ public class AuthController {
 
 
     @PostMapping("logout-all")
-    public ResponseEntity<?> logoutAll(@RequestHeader("Authorization") String authHeader) throws AuthenticationException {
-        authService.logoutAll(authHeader);
+    public ResponseEntity<?> logoutAll(Authentication authentication) throws AuthenticationException {
+        authService.logoutAll(authentication);
         return ResponseEntity.ok().build();
     }
 }

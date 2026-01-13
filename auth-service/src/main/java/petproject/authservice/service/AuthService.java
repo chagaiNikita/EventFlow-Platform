@@ -1,5 +1,6 @@
 package petproject.authservice.service;
 
+import org.springframework.security.core.Authentication;
 import petproject.authservice.dto.UserRequestDto;
 import petproject.authservice.dto.JwtAuthenticationDto;
 import petproject.authservice.dto.RefreshTokenRequestDto;
@@ -15,5 +16,5 @@ public interface AuthService {
 
     void logout(String refreshToken);
 
-    void logoutAll(String authHeader) throws AuthenticationException;
+    void logoutAll(Authentication authentication) throws AuthenticationException;
 }

@@ -7,6 +7,7 @@ import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import petproject.authservice.dto.JwtAuthenticationDto;
 import petproject.authservice.model.Credential;
 import petproject.authservice.service.RefreshTokenService;
@@ -54,13 +55,16 @@ public class JwtService {
         return refreshTokenService.validateToken(token);
     }
 
+    @Transactional
     public JwtAuthenticationDto refreshBaseToken(Credential credential, String refreshToken) {
         JwtAuthenticationDto jwtAuthenticationDto = new JwtAuthenticationDto();
         jwtAuthenticationDto.setToken(generateJwtToken(credential));
-        jwtAuthenticationDto.setRefreshToken(refreshToken);
+        refreshTokenService.deleteToken(refreshToken);
+        jwtAuthenticationDto.setRefreshToken(generateRefreshToken(credential));
         return jwtAuthenticationDto;
     }
 
+    @Transactional
     public JwtAuthenticationDto generateAuthToken(Credential credential) {
         JwtAuthenticationDto jwtAuthenticationDto = new JwtAuthenticationDto();
         jwtAuthenticationDto.setToken(generateJwtToken(credential));
@@ -69,7 +73,7 @@ public class JwtService {
     }
 
     private String generateJwtToken(Credential credential) {
-        Date date = Date.from(LocalDateTime.now().plusMinutes(10).atZone(ZoneId.systemDefault()).toInstant());
+        Date date = Date.from(LocalDateTime.now().plusMinutes(15).atZone(ZoneId.systemDefault()).toInstant());
         return Jwts.builder()
                 .subject(credential.getEmail())
                 .claim("user_id", credential.getUserId())
@@ -93,10 +97,7 @@ public class JwtService {
         refreshTokenService.deleteToken(refreshToken);
     }
 
-    public void deleteAllUserTokens(String token) {
-        Claims claims = getClaimsFromToken(token);
-        UUID userId = UUID.fromString(claims.get("user_id").toString());
-
+    public void deleteAllUserTokens(UUID userId) {
         refreshTokenService.deleteAllTokensByUserId(userId);
     }
 }

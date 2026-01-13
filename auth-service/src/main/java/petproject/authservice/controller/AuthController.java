@@ -4,13 +4,10 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import petproject.authservice.dto.LogoutDto;
-import petproject.authservice.dto.UserRegisterDto;
+import petproject.authservice.dto.UserRequestDto;
 import petproject.authservice.dto.JwtAuthenticationDto;
-import petproject.authservice.dto.RefreshTokenDto;
-import petproject.authservice.dto.UserCredentialsDto;
+import petproject.authservice.dto.RefreshTokenRequestDto;
 import petproject.authservice.service.AuthService;
-import petproject.authservice.service.CredentialService;
 
 import javax.naming.AuthenticationException;
 
@@ -19,12 +16,10 @@ import javax.naming.AuthenticationException;
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
-    private final CredentialService credentialService;
-
     @PostMapping
-    public ResponseEntity<?> signIn(@RequestBody UserCredentialsDto userCredentialsDto) {
+    public ResponseEntity<?> signIn(@RequestBody @Valid UserRequestDto userRequestDto) {
         try {
-            JwtAuthenticationDto jwtAuthenticationDto = authService.signIn(userCredentialsDto);
+            JwtAuthenticationDto jwtAuthenticationDto = authService.signIn(userRequestDto);
             return ResponseEntity.ok(jwtAuthenticationDto);
         } catch (AuthenticationException e) {
             throw new RuntimeException("Authentication failed" + e.getMessage());
@@ -32,23 +27,20 @@ public class AuthController {
     }
 
     @PostMapping("refresh")
-    public ResponseEntity<?> refresh(@RequestBody @Valid RefreshTokenDto refreshTokenDto) throws AuthenticationException {
-        return ResponseEntity.ok(authService.refreshToken(refreshTokenDto));
+    public ResponseEntity<?> refresh(@RequestBody @Valid RefreshTokenRequestDto refreshTokenRequestDto) throws AuthenticationException {
+        return ResponseEntity.ok(authService.refreshToken(refreshTokenRequestDto));
     }
 
     @PostMapping("register")
-    public ResponseEntity<?> register(@RequestBody @Valid UserRegisterDto userRegisterDto) {
-        return ResponseEntity.ok(authService.register(userRegisterDto));
+    public ResponseEntity<?> register(@RequestBody @Valid UserRequestDto userRequestDto) {
+        return ResponseEntity.ok(authService.register(userRequestDto));
     }
 
-    @GetMapping()
-    public ResponseEntity<?> getCredentials() {
-        return ResponseEntity.ok(credentialService.getAllCredentials());
-    }
+
 
     @PostMapping("logout")
-    public ResponseEntity<?> logout(@RequestBody @Valid LogoutDto logoutDto) {
-        authService.logout(logoutDto.getRefreshToken());
+    public ResponseEntity<?> logout(@RequestBody @Valid RefreshTokenRequestDto refreshTokenRequestDto) {
+        authService.logout(refreshTokenRequestDto.getRefreshToken());
         return ResponseEntity.ok().build();
     }
 

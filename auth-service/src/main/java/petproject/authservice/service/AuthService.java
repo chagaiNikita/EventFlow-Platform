@@ -1,18 +1,17 @@
 package petproject.authservice.service;
 
-import petproject.authservice.dto.UserRegisterDto;
+import petproject.authservice.dto.UserRequestDto;
 import petproject.authservice.dto.JwtAuthenticationDto;
-import petproject.authservice.dto.RefreshTokenDto;
-import petproject.authservice.dto.UserCredentialsDto;
+import petproject.authservice.dto.RefreshTokenRequestDto;
 
 import javax.naming.AuthenticationException;
 
 public interface AuthService {
-    JwtAuthenticationDto signIn(UserCredentialsDto userCredentialsDto) throws AuthenticationException;
+    JwtAuthenticationDto signIn(UserRequestDto userRequestDto) throws AuthenticationException;
 
-    JwtAuthenticationDto refreshToken(RefreshTokenDto refreshTokenDto) throws AuthenticationException;
+    JwtAuthenticationDto refreshToken(RefreshTokenRequestDto refreshTokenRequestDto) throws AuthenticationException;
 
-    JwtAuthenticationDto register(UserRegisterDto userRegisterDto);
+    JwtAuthenticationDto register(UserRequestDto userRequestDto);
 
     void logout(String refreshToken);
 

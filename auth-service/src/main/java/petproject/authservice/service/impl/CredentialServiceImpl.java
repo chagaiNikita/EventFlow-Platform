@@ -3,12 +3,9 @@ package petproject.authservice.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import petproject.authservice.dto.CredentialCreateDto;
 import petproject.authservice.exception.EmailAlreadyExistsException;
-import petproject.authservice.mapper.CredentialMapper;
 import petproject.authservice.model.Credential;
 import petproject.authservice.repository.CredentialRepository;
-import petproject.authservice.dto.UserCredentialsDto;
 import petproject.authservice.service.CredentialService;
 
 import javax.naming.AuthenticationException;
@@ -22,18 +19,19 @@ import java.util.UUID;
 public class CredentialServiceImpl implements CredentialService {
     private final CredentialRepository credentialRepository;
     private final PasswordEncoder passwordEncoder;
-    private final CredentialMapper credentialMapper;
 
     @Override
-    public Credential createCredential(CredentialCreateDto credentialCreateDto) {
-        if (credentialRepository.existsByEmail(credentialCreateDto.getEmail())) {
+    public Credential createCredential(String email, String password) {
+        if (credentialRepository.existsByEmail(email)) {
             throw new EmailAlreadyExistsException();
         }
 
-        Credential credential = credentialMapper.toCredential(credentialCreateDto);
-        credential.setUserId(UUID.randomUUID()); //TODO реализовать подставку реального юзер айди
-        credential.setPasswordHash(passwordEncoder.encode(credentialCreateDto.getPassword()));
-        credential.setCreatedAt(LocalDateTime.now()); //TODO сделать установку времени по бишкеку
+        Credential credential = Credential.builder()
+                .email(email)
+                .userId(UUID.randomUUID()) //TODO реализовать подставку реального юзер айди
+                .passwordHash(passwordEncoder.encode(password))
+                .createdAt(LocalDateTime.now()) //TODO сделать установку времени по бишкеку
+                .build();
         return credentialRepository.save(credential);
     }
 
@@ -43,11 +41,11 @@ public class CredentialServiceImpl implements CredentialService {
     }
 
     @Override
-    public Credential findByCredentials(UserCredentialsDto userCredentialsDto) throws AuthenticationException {
-        Optional<Credential> optionalCredential = credentialRepository.findByEmail(userCredentialsDto.getEmail());
+    public Credential findByCredentials(String email, String password) throws AuthenticationException {
+        Optional<Credential> optionalCredential = credentialRepository.findByEmail(email);
         if (optionalCredential.isPresent()) {
             Credential credential = optionalCredential.get();
-            if (passwordEncoder.matches(userCredentialsDto.getPassword(), credential.getPasswordHash())) {
+            if (passwordEncoder.matches(password, credential.getPasswordHash())) {
                 return credential;
             }
         }

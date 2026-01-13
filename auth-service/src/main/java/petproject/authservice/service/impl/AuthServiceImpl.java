@@ -2,13 +2,11 @@ package petproject.authservice.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import petproject.authservice.dto.CredentialCreateDto;
-import petproject.authservice.dto.UserRegisterDto;
+import petproject.authservice.dto.UserRequestDto;
 import petproject.authservice.model.Credential;
 import petproject.authservice.dto.JwtAuthenticationDto;
 import petproject.authservice.security.jwt.JwtService;
-import petproject.authservice.dto.RefreshTokenDto;
-import petproject.authservice.dto.UserCredentialsDto;
+import petproject.authservice.dto.RefreshTokenRequestDto;
 import petproject.authservice.service.AuthService;
 import petproject.authservice.service.CredentialService;
 
@@ -22,14 +20,14 @@ public class AuthServiceImpl implements AuthService {
 
 
     @Override
-    public JwtAuthenticationDto signIn(UserCredentialsDto userCredentialsDto) throws AuthenticationException {
-        Credential credential = credentialService.findByCredentials(userCredentialsDto);
+    public JwtAuthenticationDto signIn(UserRequestDto userRequestDto) throws AuthenticationException {
+        Credential credential = credentialService.findByCredentials(userRequestDto.getEmail(), userRequestDto.getPassword());
         return jwtService.generateAuthToken(credential);
     }
 
     @Override
-    public JwtAuthenticationDto refreshToken(RefreshTokenDto refreshTokenDto) throws AuthenticationException {
-        String refreshToken = refreshTokenDto.getRefreshToken();
+    public JwtAuthenticationDto refreshToken(RefreshTokenRequestDto refreshTokenRequestDto) throws AuthenticationException {
+        String refreshToken = refreshTokenRequestDto.getRefreshToken();
         if (jwtService.validateRefreshToken(refreshToken)) {
             Credential credential = credentialService.findByUserId(jwtService.getUserIdFromRefreshToken(refreshToken));
             return jwtService.refreshBaseToken(credential, refreshToken);
@@ -38,12 +36,8 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public JwtAuthenticationDto register(UserRegisterDto userRegisterDto) {
-        Credential created = credentialService.createCredential(CredentialCreateDto.builder()
-                .email(userRegisterDto.getEmail())
-                .password(userRegisterDto.getPassword())
-                .build());
-
+    public JwtAuthenticationDto register(UserRequestDto userRequestDto) {
+        Credential created = credentialService.createCredential(userRequestDto.getEmail(),  userRequestDto.getPassword());
         return jwtService.generateAuthToken(created);
     }
 

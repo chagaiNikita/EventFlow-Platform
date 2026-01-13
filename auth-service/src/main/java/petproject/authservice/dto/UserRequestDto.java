@@ -11,7 +11,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserRegisterDto {
+public class UserRequestDto {
     @NotBlank
     @Email
     private String email;

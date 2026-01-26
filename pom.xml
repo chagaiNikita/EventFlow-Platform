@@ -24,6 +24,8 @@
     <!-- Список всех модулей -->
     <modules>
         <module>auth-service</module>
+        <module>product-service</module>
+
         <!-- Добавляй сюда новые сервисы -->
     </modules>
 

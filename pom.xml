@@ -24,7 +24,7 @@
     <!-- Список всех модулей -->
     <modules>
         <module>auth-service</module>
-        <module>product-service</module>
+        <module>user-service</module>
 
         <!-- Добавляй сюда новые сервисы -->
     </modules>
@@ -42,6 +42,8 @@
         <springdoc.version>2.8.15</springdoc.version>
         <liquibase.version>5.0.1</liquibase.version>
         <security.version>3.5.9</security.version>
+        <kafka.version>4.0.2</kafka.version>
+        <kafka-clients.version>4.1.1</kafka-clients.version>
     </properties>
 
     <!-- Управление версиями зависимостей -->
@@ -70,6 +72,18 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-security</artifactId>
                 <version>${security.version}</version>
+            </dependency>
+            <!-- Source: https://mvnrepository.com/artifact/org.springframework.kafka/spring-kafka-dist -->
+            <dependency>
+                <groupId>org.springframework.kafka</groupId>
+                <artifactId>spring-kafka</artifactId>
+                <version>${kafka.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.kafka</groupId>
+                <artifactId>kafka-clients</artifactId>
+                <version>${kafka-clients.version}</version>
             </dependency>
 
         </dependencies>

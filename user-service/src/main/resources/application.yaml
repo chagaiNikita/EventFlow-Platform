@@ -1,8 +1,38 @@
 spring:
+  config:
+    import: optional:file:.env[.properties]
   application:
     name: "user-service"
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  liquibase:
+    change-log: classpath:/db/changelog/master.yaml
+    enabled: true
   kafka:
     producer:
       bootstrap-servers: localhost:9092
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+#spring:
+#  config:
+#    import: optional:file:.env[.properties]
+#  application:
+#    name: "auth-service"
+#
+
+#  kafka:
+#    bootstrap-servers: localhost:9092
+#    producer:
+#      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+#      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+#
+#
+#logging:
+#  level:
+#    org.springframework.boot.context.config: DEBUG
+#    org.springframework.core.env: DEBUG
+#
+JWT_SECRET: ${JWT_SECRET}

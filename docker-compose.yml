@@ -10,8 +10,8 @@ services:
     image: postgres:18
     restart: always
     environment:
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=pass
+      - POSTGRES_USER=${AUTH_DB_USERNAME}
+      - POSTGRES_PASSWORD=${AUTH_DB_PASSWORD}
       - POSTGRES_DB=auth_db
     volumes:
       - pg_auth:/var/lib/postgresql

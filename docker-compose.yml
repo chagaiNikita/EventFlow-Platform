@@ -1,35 +1,30 @@
 version: '3.1'
 
 volumes:
-  pg_auth:
+  pg_data:
   kafka_data:
 
 services:
-  auth_db:
-    container_name: auth_db
+  postgres:
+    container_name: postgres
     image: postgres:18
     restart: always
     environment:
-      - POSTGRES_USER=${AUTH_DB_USERNAME}
-      - POSTGRES_PASSWORD=${AUTH_DB_PASSWORD}
-      - POSTGRES_DB=auth_db
+      - POSTGRES_USER=${POSTGRES_ADMIN_USERNAME}
+      - POSTGRES_PASSWORD=${POSTGRES_ADMIN_PASSWORD}
+      - POSTGRES_DB=postgres
+      - AUTH_DB_NAME=${AUTH_DB_NAME}
+      - AUTH_DB_USERNAME=${AUTH_DB_USERNAME}
+      - AUTH_DB_PASSWORD=${AUTH_DB_PASSWORD}
+      - USER_DB_NAME=${USER_DB_NAME}
+      - USER_DB_USERNAME=${USER_DB_USERNAME}
+      - USER_DB_PASSWORD=${USER_DB_PASSWORD}
     volumes:
-      - pg_auth:/var/lib/postgresql
+      - pg_data:/var/lib/postgresql
+      - ./db-init:/docker-entrypoint-initdb.d
     ports:
       - "127.0.0.1:5433:5432"
 
-  auth-service:
-    container_name: auth_service
-    restart: always
-    env_file:
-      - .env
-    build:
-      context: .  # Корень монорепозитория
-      dockerfile: ./auth-service/Dockerfile  # Путь к Dockerfile
-    ports:
-      - "8082:8080"
-    depends_on:
-      - auth_db
 
   kafka:
     image: apache/kafka:3.7.0
@@ -48,3 +43,18 @@ services:
       KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
     volumes:
       - kafka_data:/var/lib/kafka/data
+
+  auth-service:
+    container_name: auth_service
+    restart: always
+    env_file:
+      - .env
+    build:
+      context: .  # Корень монорепозитория
+      dockerfile: ./auth-service/Dockerfile  # Путь к Dockerfile
+    ports:
+      - "8082:8080"
+    depends_on:
+      - postgres
+      - kafka
+

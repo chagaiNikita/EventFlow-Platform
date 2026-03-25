@@ -58,3 +58,17 @@ services:
       - postgres
       - kafka
 
+  user-service:
+    container_name: user_service
+    restart: always
+    env_file:
+      - .env
+    build:
+      context: .  # Корень монорепозитория
+      dockerfile: ./user-service/Dockerfile  # Путь к Dockerfile
+    ports:
+      - "8084:8080"
+    depends_on:
+      - postgres
+      - kafka
+

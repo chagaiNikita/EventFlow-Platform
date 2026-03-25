@@ -105,6 +105,10 @@
             <artifactId>kafka-clients</artifactId>
 <!--            <version>4.1.1</version>-->
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
     </dependencies>
 
     <!-- Плагины наследуются от parent, но нужно активировать -->

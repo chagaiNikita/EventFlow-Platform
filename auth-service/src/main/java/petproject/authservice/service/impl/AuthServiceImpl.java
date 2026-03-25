@@ -51,8 +51,7 @@ public class AuthServiceImpl implements AuthService {
                 created.getUserId().toString(),
                 UserRegisteredEvent.builder()
                         .userId(created.getUserId())
-                        .surname("test")
-                        .username("test")
+                        .email(userRequestDto.getEmail())
                         .build()
         ).whenComplete((result, ex) -> {
             if (ex != null) {

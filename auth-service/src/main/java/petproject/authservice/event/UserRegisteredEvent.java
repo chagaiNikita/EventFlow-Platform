@@ -11,6 +11,5 @@ import java.util.UUID;
 @NoArgsConstructor
 public class UserRegisteredEvent {
     private UUID userId;
-    private String username;
-    private String surname;
+    private String email;
 }

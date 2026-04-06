@@ -6,16 +6,20 @@ spring:
   datasource:
     url: ${USER_DB_URL}
     username: ${USER_DB_USERNAME}
-    password: ${DB_PASSWORD}
+    password: ${USER_DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
   liquibase:
     change-log: classpath:/db/changelog/master.yaml
     enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: validate
   kafka:
-    producer:
-      bootstrap-servers: localhost:9092
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: user-service
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
 #spring:
 #  config:
 #    import: optional:file:.env[.properties]
@@ -35,4 +39,8 @@ spring:
 #    org.springframework.boot.context.config: DEBUG
 #    org.springframework.core.env: DEBUG
 #
-JWT_SECRET: ${JWT_SECRET}
+
+logging:
+  level:
+    org.springframework.boot.context.config: DEBUG
+    org.springframework.core.env: DEBUG

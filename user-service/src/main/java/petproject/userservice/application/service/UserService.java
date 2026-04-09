@@ -7,6 +7,8 @@ import petproject.userservice.domain.model.User;
 import petproject.userservice.domain.model.UserId;
 import petproject.userservice.domain.repository.UserRepository;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -22,4 +24,7 @@ public class UserService {
         }
     }
 
+    public User findUserById(UserId userId) {
+        return userRepository.findById(userId);
+    }
 }

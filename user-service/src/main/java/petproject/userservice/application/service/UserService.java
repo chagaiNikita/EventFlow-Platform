@@ -1,5 +1,6 @@
 package petproject.userservice.application.service;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import petproject.userservice.domain.exception.UserAlreadyExistException;
@@ -26,5 +27,13 @@ public class UserService {
 
     public User findUserById(UserId userId) {
         return userRepository.findById(userId);
+    }
+
+    public User changeNames(UserId userId, String firstName, String lastName) {
+        User user = findUserById(userId);
+
+        user.changeName(firstName, lastName);
+
+        return userRepository.save(user);
     }
 }

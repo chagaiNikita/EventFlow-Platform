@@ -67,6 +67,16 @@ public final class User {
         this.updatedAt = LocalDateTime.now();
     }
 
+    public void changeName(String firstName, String lastName) {
+        if (firstName == null || firstName.isBlank())
+            throw new IllegalArgumentException("First name cannot be blank");
+        if (lastName == null || lastName.isBlank())
+            throw new IllegalArgumentException("Last name cannot be blank");
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.updatedAt = LocalDateTime.now();
+    }
+
     public void updateEmail(String newEmail) {
         if (newEmail == null || newEmail.isBlank())
             throw new IllegalArgumentException("Email cannot be blank");

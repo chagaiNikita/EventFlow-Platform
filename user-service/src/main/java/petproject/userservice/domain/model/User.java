@@ -62,8 +62,15 @@ public final class User {
         this.updatedAt = LocalDateTime.now();
     }
 
-    public void removeAddress(Address address) {
-        addresses.remove(address);
+    public void removeAddress(AddressId addressId) {
+        addresses.stream()
+                .filter(a -> a.getId().equals(addressId))
+                .findFirst()
+                .ifPresentOrElse(
+                        addresses::remove,
+                        () -> { throw new IllegalArgumentException("Address not found"); }
+                );
+
         this.updatedAt = LocalDateTime.now();
     }
 

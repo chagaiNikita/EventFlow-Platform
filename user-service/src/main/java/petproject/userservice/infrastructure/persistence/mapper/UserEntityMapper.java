@@ -7,38 +7,39 @@ import petproject.userservice.domain.model.UserId;
 import petproject.userservice.infrastructure.persistence.model.AddressEntity;
 import petproject.userservice.infrastructure.persistence.model.UserEntity;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class UserEntityMapper {
 
     public static UserEntity toEntity(User user) {
-        return UserEntity.builder()
+        UserEntity userEntity = UserEntity.builder()
                 .id(user.getId().getId())
                 .email(user.getEmail())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .createdAt(user.getCreatedAt())
                 .updatedAt(user.getUpdatedAt())
-                .addressEntities(
-                        user.getAddresses().stream()
-                                .map(a -> UserEntityMapper.toEntity(a, user.getId().getId()))
-                                .toList()
-                )
+                .addressEntities(new ArrayList<>()) // пустой список
                 .build();
+
+        // теперь есть userEntity — передаём ссылку
+        List<AddressEntity> addresses = user.getAddresses().stream()
+                .map(a -> toAddressEntity(a, userEntity)) // передаём userEntity
+                .toList();
+
+        userEntity.setAddressEntities(addresses);
+
+        return userEntity;
     }
 
-    public static AddressEntity toEntity(Address address, UUID userId) {
+    public static AddressEntity toAddressEntity(Address address, UserEntity userEntity) {
         return AddressEntity.builder()
-                .id(address.getId().getId()) // 🔥 ВАЖНО
-                .userId(userId)
+                .id(address.getId().getId())
+                .user(userEntity)       // ссылка на UserEntity вместо UUID
                 .address(address.getAddress())
                 .build();
     }
-
     public static User toDomain(UserEntity entity) {
         return User.restore(
                 new UserId(entity.getId()),
@@ -105,7 +106,7 @@ public class UserEntityMapper {
                 // ✅ INSERT
                 AddressEntity newEntity = AddressEntity.builder()
                         .id(address.getId().getId())
-                        .userId(entity.getId())
+                        .user(entity)
                         .address(address.getAddress())
 //                        .createdAt(LocalDateTime.now())
                         .build();

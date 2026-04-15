@@ -1,17 +1,15 @@
 package petproject.userservice.application.service;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import petproject.userservice.domain.exception.UserAlreadyExistException;
 import petproject.userservice.domain.model.Address;
+import petproject.userservice.domain.model.AddressId;
 import petproject.userservice.domain.model.User;
 import petproject.userservice.domain.model.UserId;
 import petproject.userservice.domain.repository.UserRepository;
-import petproject.userservice.interfaces.api.dto.AddressDto;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -52,5 +50,13 @@ public class UserService {
 
     public List<Address> getAddress(UserId userId) {
         return userRepository.findAddressesByUserId(userId);
+    }
+
+    public void deleteAddress(UserId userId, AddressId addressId) {
+        User user = findUserById(userId);
+
+        user.removeAddress(addressId);
+
+        userRepository.save(user);
     }
 }

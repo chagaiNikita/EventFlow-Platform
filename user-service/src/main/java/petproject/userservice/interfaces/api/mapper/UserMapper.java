@@ -13,6 +13,6 @@ public interface UserMapper {
 
 
     default AddressDto toAddressDto(Address address) {
-        return new AddressDto(address.getAddress());
+        return new AddressDto(address.getId().getId(), address.getAddress());
     }
 }

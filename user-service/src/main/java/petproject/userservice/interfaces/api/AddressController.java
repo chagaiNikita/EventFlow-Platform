@@ -2,11 +2,13 @@ package petproject.userservice.interfaces.api;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import petproject.userservice.application.service.UserService;
+import petproject.userservice.domain.model.AddressId;
 import petproject.userservice.domain.model.UserId;
 import petproject.userservice.infrastructure.security.AuthenticatedUser;
 import petproject.userservice.interfaces.api.dto.AddAddressRequestDto;
@@ -15,6 +17,7 @@ import petproject.userservice.interfaces.api.dto.ProfileDto;
 import petproject.userservice.interfaces.api.mapper.UserMapper;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("api/users/me/addresses")
@@ -50,5 +53,14 @@ public class AddressController {
                         .map(userMapper::toAddressDto)
                         .toList()
         );
+    }
+
+    @DeleteMapping("{addressId}")
+    public ResponseEntity<List<AddressDto>> deleteAddress(
+            @AuthenticationPrincipal AuthenticatedUser user,
+            @PathVariable("addressId") UUID addressId
+    ) {
+        userService.deleteAddress(new UserId(user.userId()), new AddressId(addressId));
+        return ResponseEntity.noContent().build();
     }
 }

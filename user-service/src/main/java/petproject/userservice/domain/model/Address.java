@@ -1,6 +1,7 @@
 package petproject.userservice.domain.model;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 public final class Address {
@@ -18,6 +19,18 @@ public final class Address {
 
     public AddressId getId() {
         return id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Address address = (Address) o;
+        return Objects.equals(id, address.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 
     public static Address create(String address) {

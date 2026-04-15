@@ -44,8 +44,7 @@ public class UserEntity {
     private LocalDateTime updatedAt;
 
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<AddressEntity> addressEntities = new ArrayList<>();
 
 }

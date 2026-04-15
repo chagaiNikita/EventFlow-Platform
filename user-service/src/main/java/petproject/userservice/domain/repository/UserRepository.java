@@ -1,8 +1,10 @@
 package petproject.userservice.domain.repository;
 
+import petproject.userservice.domain.model.Address;
 import petproject.userservice.domain.model.User;
 import petproject.userservice.domain.model.UserId;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface UserRepository {
@@ -11,4 +13,6 @@ public interface UserRepository {
     User save(User user);
 
     User findById(UserId id);
+
+    List<Address> findAddressesByUserId(UserId userId);
 }

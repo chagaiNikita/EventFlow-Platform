@@ -8,7 +8,9 @@ import petproject.userservice.domain.model.Address;
 import petproject.userservice.domain.model.User;
 import petproject.userservice.domain.model.UserId;
 import petproject.userservice.domain.repository.UserRepository;
+import petproject.userservice.interfaces.api.dto.AddressDto;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -38,11 +40,17 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User addAddress(UserId userId, String address) {
+    public List<Address> addAddress(UserId userId, String address) {
         User user = findUserById(userId);
 
         user.addAddress(Address.create(address));
 
-        return userRepository.save(user);
+        userRepository.save(user);
+
+        return user.getAddresses();
+    }
+
+    public List<Address> getAddress(UserId userId) {
+        return userRepository.findAddressesByUserId(userId);
     }
 }

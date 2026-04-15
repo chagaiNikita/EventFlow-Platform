@@ -10,8 +10,11 @@ import petproject.userservice.application.service.UserService;
 import petproject.userservice.domain.model.UserId;
 import petproject.userservice.infrastructure.security.AuthenticatedUser;
 import petproject.userservice.interfaces.api.dto.AddAddressRequestDto;
+import petproject.userservice.interfaces.api.dto.AddressDto;
 import petproject.userservice.interfaces.api.dto.ProfileDto;
 import petproject.userservice.interfaces.api.mapper.UserMapper;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/users/me/addresses")
@@ -21,19 +24,31 @@ public class AddressController {
     private final UserMapper userMapper;
 
     @PostMapping
-    public ResponseEntity<ProfileDto> addAddress(
+    public ResponseEntity<List<AddressDto>> addAddress(
             @AuthenticationPrincipal AuthenticatedUser user,
             @RequestBody @Valid AddAddressRequestDto addAddressRequestDto
     ) {
         return ResponseEntity.status(HttpStatus.CREATED).body(
-                userMapper.toProfileDtoFromUserModel(
                         userService.addAddress(
                                 new UserId(user.userId()),
                                 addAddressRequestDto.address()
-                        )
-                )
+                        ).stream()
+                                .map(userMapper::toAddressDto)
+                                .toList()
+
         );
+    }
 
-
+    @GetMapping
+    public ResponseEntity<List<AddressDto>> getAddresses(
+            @AuthenticationPrincipal AuthenticatedUser user
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                userService.getAddress(
+                        new UserId(user.userId())
+                ).stream()
+                        .map(userMapper::toAddressDto)
+                        .toList()
+        );
     }
 }

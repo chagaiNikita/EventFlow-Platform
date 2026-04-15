@@ -7,7 +7,7 @@ import java.util.List;
 public record ProfileDto(
         String email,
         String firstName,
-        String lastName,
-        List<AddressDto> addresses
+        String lastName
+//        List<AddressDto> addresses
 ) {
 }

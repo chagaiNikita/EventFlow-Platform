@@ -6,11 +6,10 @@ import petproject.userservice.domain.exception.UserNotFoundException;
 import petproject.userservice.domain.model.User;
 import petproject.userservice.domain.model.UserId;
 import petproject.userservice.domain.repository.UserRepository;
+import petproject.userservice.infrastructure.persistence.mapper.UserEntityMapper;
 import petproject.userservice.infrastructure.persistence.model.UserEntity;
 import petproject.userservice.infrastructure.persistence.repository.UserJpaRepository;
 
-import java.util.ArrayList;
-import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -25,26 +24,14 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User save(User user) {
-        UserEntity userEntity = UserEntity.builder()
-                .id(user.getId().getId())
-                .email(user.getEmail())
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .createdAt(user.getCreatedAt())
-                .updatedAt(user.getUpdatedAt())
-                .build();
+        UserEntity userEntity = userJpaRepository.findById(user.getId().getId())
+                .orElseThrow(UserNotFoundException::new);
+
+        UserEntityMapper.updateEntity(user, userEntity);
 
         userJpaRepository.save(userEntity);
 
-        return User.restore(
-                new UserId(userEntity.getId()),
-                userEntity.getEmail(),
-                userEntity.getFirstName(),
-                userEntity.getLastName(),
-                new ArrayList<>(),
-                userEntity.getCreatedAt(),
-                userEntity.getUpdatedAt()
-        );
+        return UserEntityMapper.toDomain(userEntity);
     }
 
 
@@ -53,14 +40,6 @@ public class UserRepositoryImpl implements UserRepository {
         UserEntity userEntity = userJpaRepository.findById(id.getId())
                 .orElseThrow(UserNotFoundException::new);
 
-        return User.restore(
-                new UserId(userEntity.getId()),
-                userEntity.getEmail(),
-                userEntity.getFirstName(),
-                userEntity.getLastName(),
-                new ArrayList<>(),
-                userEntity.getCreatedAt(),
-                userEntity.getUpdatedAt()
-        );
+        return UserEntityMapper.toDomain(userEntity);
     }
 }

@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import petproject.userservice.domain.exception.UserAlreadyExistException;
+import petproject.userservice.domain.model.Address;
 import petproject.userservice.domain.model.User;
 import petproject.userservice.domain.model.UserId;
 import petproject.userservice.domain.repository.UserRepository;
@@ -33,6 +34,14 @@ public class UserService {
         User user = findUserById(userId);
 
         user.changeName(firstName, lastName);
+
+        return userRepository.save(user);
+    }
+
+    public User addAddress(UserId userId, String address) {
+        User user = findUserById(userId);
+
+        user.addAddress(Address.create(address));
 
         return userRepository.save(user);
     }

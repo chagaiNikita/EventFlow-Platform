@@ -1,14 +1,13 @@
 package petproject.userservice.infrastructure.persistence.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -43,5 +42,10 @@ public class UserEntity {
     @NotNull
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private List<AddressEntity> addressEntities = new ArrayList<>();
 
 }

@@ -55,7 +55,7 @@ public class UserService {
     public void deleteAddress(UserId userId, AddressId addressId) {
         User user = findUserById(userId);
 
-        user.removeAddress(addressId);
+        user.removeAddress(addressId); //TODO добавить проверку не участвует ли адрес в заказе
 
         userRepository.save(user);
     }

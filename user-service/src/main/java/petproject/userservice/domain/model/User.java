@@ -58,7 +58,7 @@ public final class User {
 
     // бизнес-методы
     public void addAddress(Address address) {
-        if (addresses.size() == 5) {
+        if (addresses.size() >= 5) {
             throw new IllegalArgumentException("Max address count is 5");
         }
         addresses.add(address);

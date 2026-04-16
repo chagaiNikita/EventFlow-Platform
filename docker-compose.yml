@@ -70,7 +70,7 @@ services:
       context: .  # Корень монорепозитория
       dockerfile: ./user-service/Dockerfile  # Путь к Dockerfile
     ports:
-      - "8084:8080"
+      - "8083:8080"
     depends_on:
       - postgres
       - kafka

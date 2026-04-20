@@ -1,0 +1,14 @@
+package kg.bee.productservice.domain.model;
+
+public final class Category {
+    private final String name;
+
+
+    public Category(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+}

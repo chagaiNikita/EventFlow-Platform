@@ -1,0 +1,14 @@
+#!/bin/bash
+set -e
+
+
+psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL
+    CREATE DATABASE ${PRODUCT_DB_NAME};
+    CREATE USER ${PRODUCT_DB_USERNAME} WITH PASSWORD '${PRODUCT_DB_PASSWORD}';
+    GRANT ALL PRIVILEGES ON DATABASE ${PRODUCT_DB_NAME} TO ${PRODUCT_DB_USERNAME};
+
+    \c ${PRODUCT_DB_NAME}
+    GRANT ALL ON SCHEMA public TO ${PRODUCT_DB_USERNAME};
+EOSQL
+
+echo "Databases and users for product service created successfully!"

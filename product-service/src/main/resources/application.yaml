@@ -1,0 +1,26 @@
+spring:
+  config:
+    import: optional:file:.env[.properties]
+  application:
+    name: "product-service"
+  datasource:
+    url: ${PRODUCT_DB_URL}
+    username: ${PRODUCT_DB_USERNAME}
+    password: ${PRODUCT_DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  liquibase:
+    change-log: classpath:/db/changelog/master.yaml
+    enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
+    consumer:
+      group-id: product-service
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+#      properties:
+#        spring.json.trusted.packages: "*"
+#        spring.json.type.mapping: "petproject.authservice.event.UserRegisteredEvent:petproject.userservice.interfaces.kafka.dto.UserRegisteredEvent"

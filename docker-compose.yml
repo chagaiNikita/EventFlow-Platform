@@ -19,6 +19,9 @@ services:
       - USER_DB_NAME=${USER_DB_NAME}
       - USER_DB_USERNAME=${USER_DB_USERNAME}
       - USER_DB_PASSWORD=${USER_DB_PASSWORD}
+      - PRODUCT_DB_NAME=${PRODUCT_DB_NAME}
+      - PRODUCT_DB_USERNAME=${PRODUCT_DB_USERNAME}
+      - PRODUCT_DB_PASSWORD=${PRODUCT_DB_PASSWORD}
     volumes:
       - pg_data:/var/lib/postgresql
       - ./db-init:/docker-entrypoint-initdb.d

@@ -16,7 +16,7 @@ import java.util.UUID;
 @Setter
 @Entity
 @Table(name = "stock_reservations")
-public class StockReservation {
+public class StockReservationEntity {
     @Id
     @Column(name = "id", nullable = false)
     private UUID id;

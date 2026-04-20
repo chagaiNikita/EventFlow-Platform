@@ -1,5 +1,7 @@
 package kg.bee.productservice.domain.model;
 
+import java.util.UUID;
+
 public class Product {
     private final ProductId id;
     private final UserId sellerId;
@@ -26,12 +28,16 @@ public class Product {
         this.version = version;
     }
 
-    public static Product create(ProductId id, UserId sellerId, String name, String description, Category category, Money price, int stock, int reserved, ProductStatus status, Long version) {
-        return new Product(id, sellerId, name, description, category, price, stock, reserved, status, version);
+    public static Product create(UserId sellerId, String name, String description, Category category, Money price, int stock) {
+        ProductId id = new ProductId(UUID.randomUUID());
+
+        return new Product(id, sellerId, name, description, category, price, stock, 0, ProductStatus.ACTIVE, 0L);
     }
 
     public void upTheStock(int amount) {
-        this.stock += amount;
+        if (amount > 0) {
+            this.stock += amount;
+        }
     }
 
     public void removeFromSale() {

@@ -18,7 +18,7 @@ import java.util.UUID;
 @Setter
 @Entity
 @Table(name = "products")
-public class Product {
+public class ProductEntity {
     @Id
     @Column(name = "id", nullable = false)
     private UUID id;

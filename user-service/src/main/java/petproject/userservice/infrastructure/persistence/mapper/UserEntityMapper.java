@@ -18,14 +18,14 @@ public class UserEntityMapper {
                 .email(user.getEmail())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
-                .createdAt(user.getCreatedAt())
-                .updatedAt(user.getUpdatedAt())
                 .addressEntities(new ArrayList<>()) // пустой список
                 .build();
 
         // теперь есть userEntity — передаём ссылку
-        List<AddressEntity> addresses = user.getAddresses().stream()
-                .map(a -> toAddressEntity(a, userEntity)) // передаём userEntity
+        List<AddressEntity> addresses = Optional.of(user.getAddresses())
+                .orElseGet(List::of)
+                .stream()
+                .map(a -> toAddressEntity(a, userEntity))
                 .toList();
 
         userEntity.setAddressEntities(addresses);
@@ -69,7 +69,6 @@ public class UserEntityMapper {
         entity.setEmail(user.getEmail());
         entity.setFirstName(user.getFirstName());
         entity.setLastName(user.getLastName());
-        entity.setUpdatedAt(user.getUpdatedAt());
 
         List<AddressEntity> existing = entity.getAddressEntities();
 

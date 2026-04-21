@@ -25,6 +25,7 @@
     <modules>
         <module>auth-service</module>
         <module>user-service</module>
+        <module>product-service</module>
 
         <!-- Добавляй сюда новые сервисы -->
     </modules>

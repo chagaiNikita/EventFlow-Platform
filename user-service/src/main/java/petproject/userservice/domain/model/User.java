@@ -11,19 +11,14 @@ public final class User {
     private String firstName;
     private String lastName;
     private final List<Address> addresses;
-    private final LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 
     private User(UserId id, String email, String firstName,
-                 String lastName, List<Address> addresses,
-                 LocalDateTime createdAt, LocalDateTime updatedAt) {
+                 String lastName, List<Address> addresses) {
         this.id = id;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.addresses = new ArrayList<>(addresses);
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
     }
 
     public static User create(UserId userId, String email, String firstName, String lastName) {
@@ -32,9 +27,7 @@ public final class User {
                 email,
                 firstName,
                 lastName,
-                new ArrayList<>(),
-                LocalDateTime.now(),
-                LocalDateTime.now()
+                new ArrayList<>()
         );
     }
 
@@ -44,16 +37,14 @@ public final class User {
                 email,
                 null,
                 null,
-                new ArrayList<>(),
-                LocalDateTime.now(),
-                LocalDateTime.now()
+                new ArrayList<>()
         );
     }
 
     public static User restore(UserId id, String email, String firstName,
                                String lastName, List<Address> addresses,
                                LocalDateTime createdAt, LocalDateTime updatedAt) {
-        return new User(id, email, firstName, lastName, addresses, createdAt, updatedAt);
+        return new User(id, email, firstName, lastName, addresses);
     }
 
     // бизнес-методы
@@ -62,7 +53,6 @@ public final class User {
             throw new IllegalArgumentException("Max address count is 5");
         }
         addresses.add(address);
-        this.updatedAt = LocalDateTime.now();
     }
 
     public void removeAddress(AddressId addressId) {
@@ -73,8 +63,6 @@ public final class User {
                         addresses::remove,
                         () -> { throw new IllegalArgumentException("Address not found"); }
                 );
-
-        this.updatedAt = LocalDateTime.now();
     }
 
     public void changeName(String firstName, String lastName) {
@@ -84,14 +72,12 @@ public final class User {
             throw new IllegalArgumentException("Last name cannot be blank");
         this.firstName = firstName;
         this.lastName = lastName;
-        this.updatedAt = LocalDateTime.now();
     }
 
     public void updateEmail(String newEmail) {
         if (newEmail == null || newEmail.isBlank())
             throw new IllegalArgumentException("Email cannot be blank");
         this.email = newEmail;
-        this.updatedAt = LocalDateTime.now();
     }
 
     public UserId getId() { return id; }
@@ -99,8 +85,6 @@ public final class User {
     public String getFirstName() { return firstName; }
     public String getLastName() { return lastName; }
     public List<Address> getAddresses() { return List.copyOf(addresses); }
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public LocalDateTime getUpdatedAt() { return updatedAt; }
 
     @Override
     public boolean equals(Object o) {

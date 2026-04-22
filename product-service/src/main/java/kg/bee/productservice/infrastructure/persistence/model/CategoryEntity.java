@@ -6,8 +6,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.UUID;
 
@@ -15,7 +14,10 @@ import java.util.UUID;
 @Setter
 @Entity
 @Table(name = "categories")
-public class Category {
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class CategoryEntity {
     @Id
     @Column(name = "id", nullable = false)
     private UUID id;

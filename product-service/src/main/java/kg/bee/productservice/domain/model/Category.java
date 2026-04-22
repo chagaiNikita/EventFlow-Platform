@@ -23,4 +23,14 @@ public class Category {
     public static Category create(String name) {
         return new Category(new CategoryId(UUID.randomUUID()), name);
     }
+
+    public static Category restore(CategoryId id, String name) {
+        return new Category(id, name);
+    }
+
+    public void changeName(String name) {
+        if (!name.isBlank()) {
+            this.name = name;
+        }
+    }
 }

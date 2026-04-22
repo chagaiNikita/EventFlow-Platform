@@ -35,10 +35,9 @@ public class ProductEntity {
     @Column(name = "description", length = Integer.MAX_VALUE)
     private String description;
 
-    @Size(max = 100)
     @NotNull
-    @Column(name = "category", nullable = false, length = 100)
-    private String category;
+    @Column(name = "category_id")
+    private UUID categoryId;
 
     @NotNull
     @Column(name = "price", nullable = false, precision = 10, scale = 2)

@@ -1,0 +1,36 @@
+package petproject.productservice.domain.model;
+
+import java.util.UUID;
+
+public class Category {
+    private final CategoryId id;
+    private String name;
+
+
+    public Category(CategoryId id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public CategoryId getId() {
+        return id;
+    }
+
+    public static Category create(String name) {
+        return new Category(new CategoryId(UUID.randomUUID()), name);
+    }
+
+    public static Category restore(CategoryId id, String name) {
+        return new Category(id, name);
+    }
+
+    public void changeName(String name) {
+        if (!name.isBlank()) {
+            this.name = name;
+        }
+    }
+}

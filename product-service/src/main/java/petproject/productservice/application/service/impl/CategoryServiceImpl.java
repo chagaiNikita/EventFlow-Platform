@@ -21,6 +21,11 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    public Category findCategoryById(CategoryId categoryId) {
+        return categoryRepository.findById(categoryId);
+    }
+
+    @Override
     public Category createCategory(String name) {
         if (categoryRepository.existCategoryByName(name)) {
             throw new CategoryAlreadyExistException();

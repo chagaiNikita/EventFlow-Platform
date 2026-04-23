@@ -1,29 +1,19 @@
-package petproject.productservice.interfaces.api.dto;
+package petproject.productservice.application.command;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import lombok.Getter;
-import lombok.Setter;
+import petproject.productservice.domain.model.UserId;
 
 import java.util.UUID;
 
-
-public record CreateProductRequestDto (
-        @NotBlank
+public record CreateProductCommand (
+        UUID userId,
         String name,
-        @NotBlank
         String description,
-        @NotNull
         UUID categoryId,
-        @NotNull
-        @Positive
         Double price,
-
-        @NotBlank
         String currency,
-        @NotNull
-        @Positive
         Integer stock
 )
 {}

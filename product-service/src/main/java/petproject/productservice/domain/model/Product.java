@@ -7,31 +7,43 @@ public class Product {
     private final UserId sellerId;
     private String name;
     private String description;
-    private Category category;
+    private CategoryId categoryId;
     private Money price;
     private int stock;
     private int reserved;
     private ProductStatus status;
-    private Long version;
 
 
-    private Product(ProductId id, UserId sellerId, String name, String description, Category category, Money price, int stock, int reserved, ProductStatus status, Long version) {
+    private Product(ProductId id, UserId sellerId, String name, String description, CategoryId categoryId, Money price, int stock, int reserved, ProductStatus status) {
         this.id = id;
         this.sellerId = sellerId;
         this.name = name;
         this.description = description;
-        this.category = category;
+        this.categoryId = categoryId;
         this.price = price;
         this.stock = stock;
         this.reserved = reserved;
         this.status = status;
-        this.version = version;
     }
 
-    public static Product create(UserId sellerId, String name, String description, Category category, Money price, int stock) {
+    public static Product create(UserId sellerId, String name, String description, CategoryId categoryId, Money price, int stock) {
         ProductId id = new ProductId(UUID.randomUUID());
 
-        return new Product(id, sellerId, name, description, category, price, stock, 0, ProductStatus.ACTIVE, 0L);
+        return new Product(id, sellerId, name, description, categoryId, price, stock, 0, ProductStatus.ACTIVE);
+    }
+
+    public static Product restore(
+            ProductId id,
+            UserId sellerId,
+            String name,
+            String description,
+            CategoryId categoryId,
+            Money price,
+            int stock,
+            int reserved,
+            ProductStatus status
+    ) {
+        return new Product(id, sellerId, name, description, categoryId, price, stock, reserved, status);
     }
 
     public void upTheStock(int amount) {
@@ -48,10 +60,10 @@ public class Product {
     }
 
 
-    public void update(String name, String description, Category category, Money price) {
+    public void update(String name, String description, CategoryId categoryId, Money price) {
         this.name = name;
         this.description = description;
-        this.category = category;
+        this.categoryId = categoryId;
         this.price = price;
     }
 
@@ -73,8 +85,8 @@ public class Product {
         return description;
     }
 
-    public Category getCategory() {
-        return category;
+    public CategoryId getCategoryId() {
+        return categoryId;
     }
 
     public Money getPrice() {
@@ -93,7 +105,4 @@ public class Product {
         return status;
     }
 
-    public Long getVersion() {
-        return version;
-    }
 }

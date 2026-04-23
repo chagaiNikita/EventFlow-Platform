@@ -62,6 +62,7 @@ public class ProductEntity {
 
     @NotNull
     @ColumnDefault("0")
+    @Version
     @Column(name = "version", nullable = false)
     private Long version;
 

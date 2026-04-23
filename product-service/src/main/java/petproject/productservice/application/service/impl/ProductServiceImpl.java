@@ -10,6 +10,7 @@ import petproject.productservice.domain.repository.CategoryRepository;
 import petproject.productservice.domain.repository.ProductRepository;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -30,5 +31,10 @@ public class ProductServiceImpl implements ProductService {
         );
 
         return productRepository.save(product);
+    }
+
+    @Override
+    public List<Product> findProductsBySeller(UserId userId) {
+        return productRepository.findAllProductsBySellerId(userId);
     }
 }

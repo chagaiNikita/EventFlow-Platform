@@ -25,6 +25,7 @@ public interface ProductMapper {
     default UUID map(ProductId id) { return id.getId(); }
     default UUID map(UserId id) { return id.getId(); }
     default UUID map(CategoryId id) { return id.getId(); }
+    default UUID map(String string) {return UUID.fromString(string);}
 
     // Money
     default BigDecimal map(Money money) { return money.getPrice(); }

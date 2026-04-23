@@ -20,10 +20,11 @@ spring:
       group-id: user-service
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       properties:
         spring.json.trusted.packages: "*"
         spring.json.type.mapping: "petproject.authservice.event.UserRegisteredEvent:petproject.userservice.interfaces.kafka.dto.UserRegisteredEvent"
+      enable-auto-commit: false
     #spring:
 #  config:
 #    import: optional:file:.env[.properties]

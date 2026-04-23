@@ -1,9 +1,11 @@
 package petproject.authservice.service.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import petproject.authservice.dto.UserRequestDto;
 import petproject.authservice.event.UserRegisteredEvent;
 import petproject.authservice.model.Credential;
@@ -13,6 +15,7 @@ import petproject.authservice.dto.RefreshTokenRequestDto;
 import petproject.authservice.security.userDetails.CustomUserDetails;
 import petproject.authservice.service.AuthService;
 import petproject.authservice.service.CredentialService;
+import petproject.authservice.service.OutboxService;
 
 import javax.naming.AuthenticationException;
 import java.util.UUID;
@@ -22,7 +25,7 @@ import java.util.UUID;
 public class AuthServiceImpl implements AuthService {
     private final JwtService jwtService;
     private final CredentialService credentialService;
-    private final KafkaTemplate<String, UserRegisteredEvent> kafkaTemplate;
+    private final OutboxService outboxService;
     private final String TOPIC_USER_REGISTERED = "user.registered";
 
 
@@ -43,24 +46,30 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Transactional
     public JwtAuthenticationDto register(UserRequestDto userRequestDto) {
         Credential created = credentialService.createCredential(userRequestDto.getEmail(),  userRequestDto.getPassword());
+        outboxService.createOutbox(TOPIC_USER_REGISTERED, UserRegisteredEvent.builder()
+                .userId(created.getUserId())
+                .email(userRequestDto.getEmail())
+                .build());
 
-        kafkaTemplate.send(
-                TOPIC_USER_REGISTERED,
-                created.getUserId().toString(),
-                UserRegisteredEvent.builder()
-                        .userId(created.getUserId())
-                        .email(userRequestDto.getEmail())
-                        .build()
-        ).whenComplete((result, ex) -> {
-            if (ex != null) {
-                System.err.println("❌ KAFKA SEND ERROR");
-                ex.printStackTrace();
-            } else {
-                System.out.println("✅ SENT TO KAFKA: " + result.getRecordMetadata());
-            }
-        });
+
+//        kafkaTemplate.send(
+//                TOPIC_USER_REGISTERED,
+//                created.getUserId().toString(),
+//                UserRegisteredEvent.builder()
+//                        .userId(created.getUserId())
+//                        .email(userRequestDto.getEmail())
+//                        .build()
+//        ).whenComplete((result, ex) -> {
+//            if (ex != null) {
+//                System.err.println("❌ KAFKA SEND ERROR");
+//                ex.printStackTrace();
+//            } else {
+//                System.out.println("✅ SENT TO KAFKA: " + result.getRecordMetadata());
+//            }
+//        });
 
         return jwtService.generateAuthToken(created);
     }

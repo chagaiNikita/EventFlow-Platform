@@ -16,14 +16,17 @@ import java.util.List;
 public class UserService {
     private final UserRepository userRepository;
 
-    public User createUser(UserId userId, String email) {
+    public void createUser(UserId userId, String email) {
         boolean existUserByEmail = userRepository.existUserByEmail(email);
 
         if (!existUserByEmail) {
-            return userRepository.save(User.create(userId, email));
-        } else {
-            throw new UserAlreadyExistException();
+            userRepository.save(User.create(userId, email));
         }
+
+//        else { не выбрасываю exception чтобы лишний раз не засорять логи,
+//        также допускаю случаи когда одно сообщение может придти повторно
+//            throw new UserAlreadyExistException();
+//        }
     }
 
     public User findUserById(UserId userId) {

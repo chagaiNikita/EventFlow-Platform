@@ -48,13 +48,19 @@ public class Product {
         return new Product(id, sellerId, name, description, categoryId, price, stock, reserved, status);
     }
 
-    public void upTheStock(int amount) {
+    public void upTheStock(UserId sellerId, int amount) {
+        if (!sellerId.equals(this.sellerId)) {
+            throw new ActionNotValidException();
+        }
         if (amount > 0) {
             this.stock += amount;
         }
     }
 
-    public void removeFromSale() {
+    public void removeFromSale(UserId sellerId) {
+        if (!sellerId.equals(this.sellerId)) {
+            throw new ActionNotValidException();
+        }
         if (reserved != 0) {
             throw new IllegalArgumentException("Нельзя снять с продажи пока есть зарезервированные товары");
         }

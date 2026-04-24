@@ -2,6 +2,7 @@ package petproject.productservice.application.service;
 
 import org.apache.logging.log4j.simple.internal.SimpleProvider;
 import petproject.productservice.application.command.CreateProductCommand;
+import petproject.productservice.application.command.UpStockProductCommand;
 import petproject.productservice.application.command.UpdateProductCommand;
 import petproject.productservice.domain.model.Product;
 import petproject.productservice.domain.model.UserId;
@@ -14,5 +15,9 @@ public interface ProductService {
 
     List<Product> findProductsBySeller(UserId userId);
 
-    Product updateProduct(UUID productId, UpdateProductCommand updateProductCommand);
+    Product updateProduct(UpdateProductCommand updateProductCommand);
+
+    Product upStockProduct(UpStockProductCommand upStockProductCommand);
+
+    void removeProductFromTheSale(UUID productId, UUID userId);
 }

@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import petproject.productservice.application.command.CreateProductCommand;
+import petproject.productservice.application.command.UpStockProductCommand;
 import petproject.productservice.application.command.UpdateProductCommand;
 import petproject.productservice.application.service.ProductService;
 import petproject.productservice.domain.model.UserId;
@@ -13,6 +14,7 @@ import petproject.productservice.infrastructure.security.AuthenticatedUser;
 import petproject.productservice.interfaces.api.dto.CreateProductRequestDto;
 import org.springframework.http.ResponseEntity;
 import petproject.productservice.interfaces.api.dto.ProductResponseDto;
+import petproject.productservice.interfaces.api.dto.UpStockRequestDto;
 import petproject.productservice.interfaces.api.dto.UpdateProductRequestDto;
 import petproject.productservice.interfaces.api.mapper.ProductMapper;
 
@@ -52,9 +54,27 @@ public class ProductController {
             @RequestBody @Valid UpdateProductRequestDto updateProductRequestDto,
             @PathVariable UUID productId
     ) {
-        UpdateProductCommand updateProductCommand = productMapper.fromDtoToCommand(updateProductRequestDto, authenticatedUser.userId());
-        return ResponseEntity.status(HttpStatus.CREATED).body(productMapper.toProductResponseDto(productService.updateProduct(productId, updateProductCommand)));
+        UpdateProductCommand updateProductCommand = productMapper.fromDtoToCommand(updateProductRequestDto, authenticatedUser.userId(), productId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(productMapper.toProductResponseDto(productService.updateProduct(updateProductCommand)));
 
     }
+
+    @PutMapping("{productId}/stock")
+    public ResponseEntity<ProductResponseDto> upTheStock(
+            @AuthenticationPrincipal AuthenticatedUser authenticatedUser,
+            @RequestBody @Valid UpStockRequestDto upStockRequestDto,
+            @PathVariable UUID productId
+    ) {
+        UpStockProductCommand upStockProductCommand = productMapper.fromDtoToCommand(upStockRequestDto, authenticatedUser.userId(), productId);
+        return ResponseEntity.status(HttpStatus.OK).body(productMapper.toProductResponseDto(productService.upStockProduct(upStockProductCommand)));
+    }
+
+    @DeleteMapping("{productId}")
+    public ResponseEntity<?> removeProductFromTheSale(@PathVariable UUID productId, @AuthenticationPrincipal AuthenticatedUser authenticatedUser) {
+        productService.removeProductFromTheSale(productId, authenticatedUser.userId());
+        return ResponseEntity.noContent().build();
+    }
+
+
 
 }

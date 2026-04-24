@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import petproject.productservice.application.command.CreateProductCommand;
+import petproject.productservice.application.command.UpStockProductCommand;
 import petproject.productservice.application.command.UpdateProductCommand;
 import petproject.productservice.application.service.ProductService;
 import petproject.productservice.domain.exception.CategoryNotFoundException;
@@ -44,8 +45,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public Product updateProduct(UUID productId, UpdateProductCommand updateProductCommand) {
-        Product product = productRepository.findById(new ProductId(productId));
+    public Product updateProduct(UpdateProductCommand updateProductCommand) {
+        Product product = productRepository.findById(new ProductId(updateProductCommand.productId()));
         CategoryId categoryId = new CategoryId(updateProductCommand.categoryId());
 
         if (!categoryRepository.existCategoryById(categoryId)) {
@@ -62,5 +63,25 @@ public class ProductServiceImpl implements ProductService {
         );
 
         return productRepository.save(product);
+    }
+
+    @Override
+    @Transactional
+    public Product upStockProduct(UpStockProductCommand upStockProductCommand) {
+        Product product = productRepository.findById(new ProductId(upStockProductCommand.productId()));
+
+        product.upTheStock(new UserId(upStockProductCommand.userId()), upStockProductCommand.amount());
+
+        return productRepository.save(product);
+    }
+
+    @Override
+    @Transactional
+    public void removeProductFromTheSale(UUID productId, UUID userId) {
+        Product product = productRepository.findById(new ProductId(productId));
+
+        product.removeFromSale(new UserId(userId));
+
+        productRepository.save(product);
     }
 }

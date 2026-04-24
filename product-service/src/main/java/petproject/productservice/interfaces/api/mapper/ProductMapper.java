@@ -3,9 +3,11 @@ package petproject.productservice.interfaces.api.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import petproject.productservice.application.command.CreateProductCommand;
+import petproject.productservice.application.command.UpdateProductCommand;
 import petproject.productservice.domain.model.*;
 import petproject.productservice.interfaces.api.dto.CreateProductRequestDto;
 import petproject.productservice.interfaces.api.dto.ProductResponseDto;
+import petproject.productservice.interfaces.api.dto.UpdateProductRequestDto;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -14,6 +16,9 @@ import java.util.UUID;
 public interface ProductMapper {
 
     CreateProductCommand fromDtoToCommand(CreateProductRequestDto createProductRequestDto, UUID userId);
+
+    UpdateProductCommand fromDtoToCommand(UpdateProductRequestDto updateProductRequestDto, UUID userId);
+
 
 
     @Mapping(target = "price", source = "price")

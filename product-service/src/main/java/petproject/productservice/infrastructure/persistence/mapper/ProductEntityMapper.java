@@ -2,6 +2,7 @@ package petproject.productservice.infrastructure.persistence.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import petproject.productservice.domain.model.*;
 import petproject.productservice.infrastructure.persistence.model.ProductEntity;
 
@@ -14,6 +15,9 @@ public interface ProductEntityMapper {
     @Mapping(target = "price", source = "price")
     @Mapping(target = "currency", source = "price")
     ProductEntity toEntity(Product product);
+
+//    @Mapping(target = "id", ignore = true)
+    void updateEntity(Product product, @MappingTarget ProductEntity entity);
 
     default Product toDomain(ProductEntity entity) {
         return Product.restore(

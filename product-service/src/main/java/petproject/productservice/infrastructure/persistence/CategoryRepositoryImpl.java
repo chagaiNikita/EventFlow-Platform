@@ -44,4 +44,9 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     public boolean existCategoryByName(String name) {
         return categoryJpaRepository.existsByNameIgnoreCase(name);
     }
+
+    @Override
+    public boolean existCategoryById(CategoryId categoryId) {
+        return categoryJpaRepository.existsById(categoryId.getId());
+    }
 }

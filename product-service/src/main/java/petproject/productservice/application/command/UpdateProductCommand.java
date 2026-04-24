@@ -2,13 +2,12 @@ package petproject.productservice.application.command;
 
 import java.util.UUID;
 
-public record CreateProductCommand (
+public record UpdateProductCommand(
         UUID userId,
         String name,
         String description,
         UUID categoryId,
         Double price,
-        String currency,
-        Integer stock
+        String currency
 )
 {}

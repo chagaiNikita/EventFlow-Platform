@@ -13,4 +13,6 @@ public interface CategoryRepository {
     Category findById(CategoryId categoryId);
 
     boolean existCategoryByName(String name);
+
+    boolean existCategoryById(CategoryId categoryId);
 }

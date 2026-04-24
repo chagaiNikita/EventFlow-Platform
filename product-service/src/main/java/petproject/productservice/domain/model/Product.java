@@ -1,5 +1,7 @@
 package petproject.productservice.domain.model;
 
+import petproject.productservice.domain.exception.ActionNotValidException;
+
 import java.util.UUID;
 
 public class Product {
@@ -60,7 +62,10 @@ public class Product {
     }
 
 
-    public void update(String name, String description, CategoryId categoryId, Money price) {
+    public void authorUpdate(UserId sellerId, String name, String description, CategoryId categoryId, Money price) {
+        if (!sellerId.equals(this.sellerId)) {
+            throw new ActionNotValidException();
+        }
         this.name = name;
         this.description = description;
         this.categoryId = categoryId;

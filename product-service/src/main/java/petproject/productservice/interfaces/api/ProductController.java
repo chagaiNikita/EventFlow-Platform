@@ -6,15 +6,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import petproject.productservice.application.command.CreateProductCommand;
+import petproject.productservice.application.command.UpdateProductCommand;
 import petproject.productservice.application.service.ProductService;
 import petproject.productservice.domain.model.UserId;
 import petproject.productservice.infrastructure.security.AuthenticatedUser;
 import petproject.productservice.interfaces.api.dto.CreateProductRequestDto;
 import org.springframework.http.ResponseEntity;
 import petproject.productservice.interfaces.api.dto.ProductResponseDto;
+import petproject.productservice.interfaces.api.dto.UpdateProductRequestDto;
 import petproject.productservice.interfaces.api.mapper.ProductMapper;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("api/products")
@@ -41,6 +44,17 @@ public class ProductController {
                         .map(productMapper::toProductResponseDto)
                         .toList()
         );
+    }
+
+    @PutMapping("{productId}")
+    public ResponseEntity<ProductResponseDto> updateProduct(
+            @AuthenticationPrincipal AuthenticatedUser authenticatedUser,
+            @RequestBody @Valid UpdateProductRequestDto updateProductRequestDto,
+            @PathVariable UUID productId
+    ) {
+        UpdateProductCommand updateProductCommand = productMapper.fromDtoToCommand(updateProductRequestDto, authenticatedUser.userId());
+        return ResponseEntity.status(HttpStatus.CREATED).body(productMapper.toProductResponseDto(productService.updateProduct(productId, updateProductCommand)));
+
     }
 
 }

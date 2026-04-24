@@ -20,4 +20,6 @@ public interface ProductService {
     Product upStockProduct(UpStockProductCommand upStockProductCommand);
 
     void removeProductFromTheSale(UUID productId, UUID userId);
+
+    void reserveProduct(UUID productId, UUID orderId, int amount);
 }

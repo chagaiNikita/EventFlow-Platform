@@ -8,9 +8,12 @@ import petproject.productservice.application.command.UpStockProductCommand;
 import petproject.productservice.application.command.UpdateProductCommand;
 import petproject.productservice.application.service.ProductService;
 import petproject.productservice.domain.exception.CategoryNotFoundException;
+import petproject.productservice.domain.exception.NoAvailableItemsException;
 import petproject.productservice.domain.model.*;
+import petproject.productservice.domain.publisher.StockEventPublisher;
 import petproject.productservice.domain.repository.CategoryRepository;
 import petproject.productservice.domain.repository.ProductRepository;
+import petproject.productservice.domain.repository.StockReservationRepository;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -21,6 +24,8 @@ import java.util.UUID;
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final StockReservationRepository stockReservationRepository;
+    private final StockEventPublisher stockEventPublisher;
 
     @Override
     @Transactional
@@ -83,5 +88,29 @@ public class ProductServiceImpl implements ProductService {
         product.removeFromSale(new UserId(userId));
 
         productRepository.save(product);
+    }
+
+    @Override
+    @Transactional
+    public void reserveProduct(UUID productId, UUID orderId, int amount) {
+        if (!stockReservationRepository.existsByOrderId(orderId)) {
+            Product product = productRepository.findById(new ProductId(productId));
+            try {
+                product.reserveItems(amount);
+                StockReservation stockReservation = StockReservation.createReservation(
+                        new OrderId(orderId),
+                        new ProductId(productId),
+                        amount
+                );
+                productRepository.save(product);
+                stockReservationRepository.save(stockReservation);
+                stockEventPublisher.publishReserved(productId, orderId, amount);
+
+            } catch (RuntimeException e) {
+                // TODO реализовать отправку ивента о том что не удалось зарезервить товар
+            }
+
+
+        }
     }
 }

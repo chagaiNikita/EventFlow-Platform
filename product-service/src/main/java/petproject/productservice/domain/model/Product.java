@@ -1,6 +1,7 @@
 package petproject.productservice.domain.model;
 
 import petproject.productservice.domain.exception.ActionNotValidException;
+import petproject.productservice.domain.exception.NoAvailableItemsException;
 
 import java.util.UUID;
 
@@ -54,6 +55,17 @@ public class Product {
         }
         if (amount > 0) {
             this.stock += amount;
+        }
+    }
+
+    public void reserveItems(int amount) {
+        if (amount < 1) {
+            throw new ActionNotValidException();
+        }
+        if (this.getStock() - this.getReserved() >= amount) {
+            this.reserved += amount;
+        } else {
+            throw new NoAvailableItemsException();
         }
     }
 

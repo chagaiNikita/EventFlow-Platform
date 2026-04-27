@@ -49,3 +49,13 @@ logging:
   level:
     org.springframework.boot.context.config: DEBUG
     org.springframework.core.env: DEBUG
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
+server:
+  port: 9091

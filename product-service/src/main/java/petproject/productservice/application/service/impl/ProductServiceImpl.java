@@ -1,6 +1,7 @@
 package petproject.productservice.application.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import petproject.productservice.application.command.CreateProductCommand;
@@ -19,6 +20,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
@@ -94,8 +96,8 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public void reserveProduct(UUID productId, UUID orderId, int amount) {
         if (!stockReservationRepository.existsByOrderId(orderId)) {
-            Product product = productRepository.findById(new ProductId(productId));
             try {
+                Product product = productRepository.findById(new ProductId(productId));
                 product.reserveItems(amount);
                 StockReservation stockReservation = StockReservation.createReservation(
                         new OrderId(orderId),
@@ -106,8 +108,9 @@ public class ProductServiceImpl implements ProductService {
                 stockReservationRepository.save(stockReservation);
                 stockEventPublisher.publishReserved(productId, orderId, amount);
 
-            } catch (RuntimeException e) {
-                // TODO реализовать отправку ивента о том что не удалось зарезервить товар
+            } catch (Exception e) {
+                log.warn(e.getMessage());
+                stockEventPublisher.publishReserveFailed(productId, orderId);
             }
 
 

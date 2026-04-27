@@ -5,7 +5,8 @@ import org.springframework.context.annotation.Configuration;
 
 @ConfigurationProperties("kafka.topics")
 public record KafkaTopicsProperties(
-        String stockReservedTopic
+        String stockReservedTopic,
+        String stockFailedTopic
 
 ) {
 }

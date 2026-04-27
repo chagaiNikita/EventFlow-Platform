@@ -17,6 +17,7 @@ spring:
   kafka:
     topics:
       stock-reserved-topic: ${STOCK_RESERVED_TOPIC}
+      stock-failed-topic: ${STOCK_FAILED_TOPIC}
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
     consumer:
       group-id: product-service

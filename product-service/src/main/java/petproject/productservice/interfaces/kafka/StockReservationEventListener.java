@@ -9,7 +9,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Component;
 import petproject.productservice.application.service.ProductService;
-import petproject.productservice.interfaces.kafka.dto.OrderReserveStockEvent;
+import petproject.productservice.interfaces.kafka.event.OrderReserveStockEvent;
 
 @Component
 @RequiredArgsConstructor

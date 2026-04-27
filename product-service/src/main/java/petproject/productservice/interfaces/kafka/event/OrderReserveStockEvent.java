@@ -1,4 +1,4 @@
-package petproject.productservice.interfaces.kafka.dto;
+package petproject.productservice.interfaces.kafka.event;
 
 import java.util.UUID;
 

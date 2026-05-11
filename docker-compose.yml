@@ -50,8 +50,19 @@ services:
     volumes:
       - kafka_data:/var/lib/kafka/data
 
+  eureka-server:
+    container_name: eureka-server
+    restart: always
+    env_file:
+      - .env
+    build:
+      context: .  # Корень монорепозитория
+      dockerfile: ./eureka-server/Dockerfile  # Путь к Dockerfile
+    ports:
+      - "8761:8761"
+
   auth-service:
-    container_name: auth_service
+    container_name: auth-service
     restart: always
     env_file:
       - .env
@@ -63,9 +74,10 @@ services:
     depends_on:
       - postgres
       - kafka
+      - eureka-server
 
   user-service:
-    container_name: user_service
+    container_name: user-service
     restart: always
     env_file:
       - .env
@@ -77,4 +89,20 @@ services:
     depends_on:
       - postgres
       - kafka
+      - eureka-server
+
+  product-service:
+    container_name: product-service
+    restart: always
+    env_file:
+      - .env
+    build:
+      context: .  # Корень монорепозитория
+      dockerfile: ./product-service/Dockerfile  # Путь к Dockerfile
+    ports:
+      - "8084:8080"
+    depends_on:
+      - postgres
+      - kafka
+      - eureka-server
 

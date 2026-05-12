@@ -35,5 +35,5 @@ eureka:
       defaultZone: ${EUREKA_URL}
   instance:
     prefer-ip-address: true
-#server:
-#  port: 9082
+server:
+  port: 0

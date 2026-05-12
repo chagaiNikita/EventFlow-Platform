@@ -40,3 +40,8 @@ eureka:
       defaultZone: ${EUREKA_URL}
   instance:
     prefer-ip-address: true
+
+app:
+  security:
+    public-paths:
+      - /api/auth

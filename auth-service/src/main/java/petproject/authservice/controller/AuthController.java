@@ -13,7 +13,7 @@ import petproject.authservice.service.AuthService;
 import javax.naming.AuthenticationException;
 
 @RestController
-@RequestMapping("auth")
+@RequestMapping("api/auth")
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;

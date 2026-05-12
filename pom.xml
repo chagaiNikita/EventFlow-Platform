@@ -27,6 +27,7 @@
         <module>user-service</module>
         <module>product-service</module>
         <module>eureka-server</module>
+        <module>api-gateway</module>
 
         <!-- Добавляй сюда новые сервисы -->
     </modules>
